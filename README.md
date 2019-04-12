@@ -6,10 +6,15 @@
 Какие-то события могут отрицательно влиять на рассудок главного героя. Если показатель рассудка опустится до нуля, герой сойдёт с ума.
 
 # Как играть
-npm install \n
+npm install
+
 npm install ws
+
 npm install -d typescript
+
 tsc
+
 node server
+
 Затем запустить в браузере index.html
 

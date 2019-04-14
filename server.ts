@@ -11,13 +11,12 @@ webSocketServer.on('connection', (ws) => {
 
   console.log("новое соединение ");
   
-  const test: Test = new Test("ep1_0");
+  const test: Test = new Test("ep0_0");
   ws.send(test.episode);
   
 
   ws.on('message', function(message: string): void {
-    test.NextEpisode(message);
-    console.log(test.mind);
+    test.nextEpisode(message);
     ws.send(test.episode);
   });
 

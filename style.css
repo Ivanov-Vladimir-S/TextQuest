@@ -1,3 +1,6 @@
 button {
     margin: 10px;
 }
+button:empty {
+	display: none;
+}

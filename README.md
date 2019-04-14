@@ -16,7 +16,7 @@ npm install
 
 npm install ws
 
-npm install -d typescript
+npm install -g typescript
 
 tsc
 

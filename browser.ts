@@ -38,8 +38,8 @@ if(buttonsEl != null && textEl != null){
     }
 
     buttonsEl.addEventListener("click", (event: MouseEvent) => {
-      if(event.target != null){
-        const targetEl: HTMLElement | null = <HTMLElement> event.target;
+      const targetEl: HTMLElement = event.target as HTMLElement;
+      if(targetEl.tagName === "BUTTON"){
         console.log(targetEl.dataset.id);
         socket.send(<string>targetEl.dataset.id);
       }

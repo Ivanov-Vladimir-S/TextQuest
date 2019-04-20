@@ -4,10 +4,10 @@ export class Hero{
     time:number;
     pastTime: number;
     hunger:number;
-    static criticalMind: number = 1;
-    static criticalHealth: number = 1;
-    static criticalHunger: number = 3;
-    static hungerPerTime: number = 2;
+    static readonly CRITICAL_MIND: number = 1;
+    static readonly CRITICAL_HEALTH: number = 1;
+    static readonly CRITICAL_HUNGER: number = 3;
+    static readonly HUNGER_PER_TIME: number = 2;
     constructor(){
         this.mind = 2;
         this.health = 2;
@@ -23,7 +23,7 @@ export class Hero{
     } 
     changeTime (deltaTime: number): void {
         this.time += deltaTime;
-        if(this.time - this.pastTime >= Hero.hungerPerTime){//Изменение голода с течением времени
+        if(this.time - this.pastTime >= Hero.HUNGER_PER_TIME){//Изменение голода с течением времени
             this.hunger--;
             this.pastTime = this.time;
         }

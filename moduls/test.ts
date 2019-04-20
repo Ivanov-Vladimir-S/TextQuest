@@ -1,16 +1,15 @@
-
+  import {Episode, ConvertedEpisode} from "./episode";
   import {Hero} from "./hero";
 
   export class Test{
       private hero: Hero; 
       static hungerPhrases: string[] = ["",""," Чувствую себя очень голодным."," Голод подступает с новой силой."," Как же хочется есть."];
       static mindPhrases: string[] = ["",""," Чувствую, как схожу с ума."," Кто это? Кто говорит? Опять голоса в голове. Остановитесь!"," Аааааааа. Эээээ. ООооо!"];
-      episode: string;
+      episode: ConvertedEpisode;
        
-      constructor(episod: string){
-        this.hero = new Hero();
-        this.episode = JSON.stringify(require("./"+episod));
-        this.episode = this.convertText(this.episode);
+      constructor(episod: string, hero: Hero){
+        this.hero = hero;
+        this.episode = this.convertText(require("./"+episod));
       }
       nextEpisode(num: string): void{
         this.changeMind();
@@ -20,74 +19,79 @@
       }
       private changeEpisode(num: string): void {
         if(!this.hero.isMad() && !this.hero.isStarve() && !this.hero.isDeath()){
-          this.episode = JSON.stringify(require("./" + JSON.parse(this.episode).to[num]));
+          this.episode = require("./" + this.episode.to[Number(num)]);
           this.episode = this.convertText(this.episode);
         }
         else{
           if(this.hero.isMad()){
-            this.episode = JSON.stringify(require("./ep_end"));
+            this.episode = require("./ep_end");
           }
           if(this.hero.isStarve()){
-            this.episode = JSON.stringify(require("./ep_end2"));
+            this.episode = require("./ep_end2");
           }
           if(this.hero.isDeath()){
-            this.episode = JSON.stringify(require("./ep_end3"));
+            this.episode = require("./ep_end3");
           }
         }
       }
-      private convertText(newEp: string): string{//изменение текста и выборов в зависимости от параметров героя
-          const converted = JSON.parse(newEp);
-          if(converted.banAdds == undefined){
+      private convertText(newEp: Episode): ConvertedEpisode{//изменение текста и выборов в зависимости от параметров героя
+          const converted = newEp;
+          if(converted.banAdds == null){
             
-            if(this.hero.hunger<=Hero.criticalHunger){
+            if(this.hero.hunger<=Hero.CRITICAL_HUNGER){
                 converted.text = converted.text + Test.hungerPhrases[this.getRandomInt(0,Test.hungerPhrases.length-1)];
             }
-            if(this.hero.mind<=Hero.criticalMind){
+            if(this.hero.mind<=Hero.CRITICAL_MIND){
               converted.text = converted.text + Test.mindPhrases[this.getRandomInt(0,Test.mindPhrases.length-1)];
             }
           }
 
           for(let i = 0; i<converted.choice.length; i++){
-            if(converted.choice[i].mind != undefined){ 
-              if(converted.choice[i].mind >= this.hero.mind){
-                converted.choice[i] = converted.choice[i].text;
-                converted.to[i] = converted.to[i].text; 
+            let choice =  converted.choice[i];          
+            if(typeof choice !== "string"){
+              if(choice.mind !== undefined){ 
+                if(choice.mind >= this.hero.mind){
+                  choice = choice.text;
+                  let to = converted.to[i];
+                  to = typeof to !== "string"? to.text:to; 
+                  converted.to[i] = to;
+                }
+                else{
+                    choice = "";
+                    converted.to[i] = "";
+                }
               }
-              else{
-                  converted.choice[i] = "";
+              else if(choice.health !== undefined){ 
+                if(choice.health < this.hero.health){
+                  choice = choice.text;
+                  let to = converted.to[i];
+                  to = typeof to !== "string"? to.text:to; 
+                  converted.to[i] = to; 
+                }
+                else{
+                  choice = "";
                   converted.to[i] = "";
+                }
               }
             }
-
-            if(converted.choice[i].health != undefined){ 
-              if(converted.choice[i].health < this.hero.health){
-                converted.choice[i] = converted.choice[i].text;
-                converted.to[i] = converted.to[i].text; 
-              }
-              else{
-                converted.choice[i] = "";
-                converted.to[i] = "";
-              }
-            }
+            converted.choice[i] = choice;
           }
-          return JSON.stringify(converted);
+          return converted as ConvertedEpisode;
       }
       private changeMind (): void {
-        const episodeJson = JSON.parse(this.episode);
+        const episodeJson = this.episode;
         if(episodeJson.mind != undefined){
           this.hero.changeMind(episodeJson.mind);
         }
       }
       private changeHealth (): void {
-        const episodeJson = JSON.parse(this.episode);
-        if(episodeJson.health != undefined){
-          this.hero.changeHealth(episodeJson.health);
+        if(this.episode.health != undefined){
+          this.hero.changeHealth(this.episode.health);
         }
       }
       private changeTime (): void {
-        const episodeJson = JSON.parse(this.episode);
-        if(episodeJson.time != undefined){
-          this.hero.changeTime(episodeJson.time);
+        if(this.episode.time != undefined){
+          this.hero.changeTime(this.episode.time);
         }
       }
       private getRandomInt(min: number, max: number): number{

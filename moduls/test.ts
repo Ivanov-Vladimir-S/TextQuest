@@ -9,7 +9,7 @@
        
       constructor(episod: string){
         this.hero = new Hero();
-        this.episode = JSON.stringify(require(episod));
+        this.episode = JSON.stringify(require("./"+episod));
         this.episode = this.convertText(this.episode);
       }
       nextEpisode(num: string): void{
@@ -18,24 +18,24 @@
         this.changeTime();
         this.changeEpisode(num);
       }
-      changeEpisode(num: string): void {
+      private changeEpisode(num: string): void {
         if(!this.hero.isMad() && !this.hero.isStarve() && !this.hero.isDeath()){
-          this.episode = JSON.stringify(require(JSON.parse(this.episode).to[num]));
+          this.episode = JSON.stringify(require("./" + JSON.parse(this.episode).to[num]));
           this.episode = this.convertText(this.episode);
         }
         else{
           if(this.hero.isMad()){
-            this.episode = JSON.stringify(require("ep_end"));
+            this.episode = JSON.stringify(require("./ep_end"));
           }
           if(this.hero.isStarve()){
-            this.episode = JSON.stringify(require("ep_end2"));
+            this.episode = JSON.stringify(require("./ep_end2"));
           }
           if(this.hero.isDeath()){
-            this.episode = JSON.stringify(require("ep_end3"));
+            this.episode = JSON.stringify(require("./ep_end3"));
           }
         }
       }
-      convertText(newEp: string): string{//изменение текста и выборов в зависимости от параметров героя
+      private convertText(newEp: string): string{//изменение текста и выборов в зависимости от параметров героя
           const converted = JSON.parse(newEp);
           if(converted.banAdds == undefined){
             
@@ -72,25 +72,25 @@
           }
           return JSON.stringify(converted);
       }
-      changeMind (): void {
+      private changeMind (): void {
         const episodeJson = JSON.parse(this.episode);
         if(episodeJson.mind != undefined){
           this.hero.changeMind(episodeJson.mind);
         }
       }
-      changeHealth (): void {
+      private changeHealth (): void {
         const episodeJson = JSON.parse(this.episode);
         if(episodeJson.health != undefined){
           this.hero.changeHealth(episodeJson.health);
         }
       }
-      changeTime (): void {
+      private changeTime (): void {
         const episodeJson = JSON.parse(this.episode);
         if(episodeJson.time != undefined){
           this.hero.changeTime(episodeJson.time);
         }
       }
-      getRandomInt(min: number, max: number): number{
+      private getRandomInt(min: number, max: number): number{
         return Math.floor(Math.random()*(max-min))+min;
       }
     }

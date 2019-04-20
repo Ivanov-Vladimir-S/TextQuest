@@ -1,10 +1,9 @@
-/// <reference path="./node_modules/test.ts" />
 
 import * as http from "http";
 import * as Static  from "node-static";
 const ep1_0 = require("ep1_0");
 import WebSocketServer = require('ws');
-import {Test} from "test";
+import {Test} from "./moduls/test";
 
 const webSocketServer: WebSocketServer.Server = new WebSocketServer.Server({port: 8081});
 webSocketServer.on('connection', (ws) => {

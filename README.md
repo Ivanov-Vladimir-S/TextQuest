@@ -14,13 +14,9 @@
 # Как играть
 npm install
 
-npm install ws
+npm run build
 
-npm install -g typescript
-
-tsc
-
-node server
+npm start
 
 Затем запустить в браузере index.html
 
